@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Crítica Textual - Sistema Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            border-right: 1px solid #e0e0e0;
+            padding: 30px 20px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            padding: 12px 15px;
+            border: none;
+            background: white;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: #e8f0f8;
+            border-left-color: #3498db;
+        }
+
+        .nav-btn.active {
+            background: #3498db;
+            color: white;
+            border-left-color: #2980b9;
+        }
+
+        .content-area {
+            padding: 40px 35px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+        }
+
+        .form-section h2 {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+
+        textarea, input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+            resize: vertical;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        textarea.large {
+            min-height: 300px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .mode-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .mode-card {
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .mode-card:hover {
+            border-color: #3498db;
+            background: #f0f7ff;
+        }
+
+        .mode-card.selected {
+            border-color: #3498db;
+            background: #3498db;
+            color: white;
+        }
+
+        .mode-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .mode-card p {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #000;
+        }
+
+        .section-note {
+            background: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #2c3e50;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .catalog-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .catalog-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+
+        .catalog-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .catalog-card .meta {
+            font-size: 0.85em;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .catalog-card .preview {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 15px;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .catalog-card .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .catalog-card button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.85em;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .badge-auto {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-manual {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                max-height: auto;
+                padding: 20px;
+            }
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .summary-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .summary-item .number {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .summary-item .label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .mode-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .mode-info strong {
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Análise Crítica Textual - Sistema Completo</h1>
+            <p>Escolha entre análise automática (IA) ou manual com catálogo de todas as suas análises</p>
+        </div>
+
+        <div class="main-layout">
+            <!-- SIDEBAR -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3>📍 Navegação</h3>
+                    <div class="nav-buttons">
+                        <button class="nav-btn active" onclick="switchTab(0)">🏠 Início</button>
+                        <button class="nav-btn" onclick="switchTab(1)">🤖 Análise Automática</button>
+                        <button class="nav-btn" onclick="switchTab(2)">✍️ Análise Manual</button>
+                        <button class="nav-btn" onclick="switchTab(3)">📚 Catálogo</button>
+                        <button class="nav-btn" onclick="switchTab(4)">📊 Resumo</button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>⚙️ Ações</h3>
+                    <div class="nav-buttons">
+                        <button class="nav-btn" onclick="exportTudo()">📥 Exportar Tudo</button>
+                        <button class="nav-btn" onclick="limparTudo()">🗑️ Limpar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENT -->
+            <div class="content-area">
+                <div class="success-message" id="successMsg">✓ Operação realizada com sucesso!</div>
+
+                <!-- TAB 0: INÍCIO -->
+                <div class="tab-content active">
+                    <div class="form-section">
+                        <h2>🏠 Bem-vindo ao Sistema de Análise Crítica</h2>
+                        
+                        <div class="summary-box">
+                            <h3>📈 Seu Progresso</h3>
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <div class="number" id="countAnalises">0</div>
+                                    <div class="label">Análises Criadas</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="number" id="countAuto">0</div>
+                                    <div class="label">Automáticas (IA)</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="number" id="countManual">0</div>
+                                    <div class="label">Manuais</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 style="color: #2c3e50; margin-bottom: 20px;">Como funciona:</h3>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                            <div style="padding: 20px; background: #f0f7ff; border-radius: 8px; border-left: 4px solid #3498db;">
+                                <h4 style="color: #2c3e50; margin-bottom: 10px;">🤖 Análise Automática</h4>
+                                <p style="color: #555; font-size: 0.9em; line-height: 1.6;">
+                                    Cole o artigo que deseja analisar e a IA (Claude) fará toda a análise para você seguindo o esquema universal. Perfeito para análises rápidas.
+                                </p>
+                                <button class="btn-primary" style="width: 100%; margin-top: 15px;" onclick="switchTab(1)">Começar →</button>
+                            </div>
+
+                            <div style="padding: 20px; background: #e8f5e9; border-radius: 8px; border-left: 4px solid #27ae60;">
+                                <h4 style="color: #2c3e50; margin-bottom: 10px;">✍️ Análise Manual</h4>
+                                <p style="color: #555; font-size: 0.9em; line-height: 1.6;">
+                                    Preencha cada etapa manualmente com seu próprio pensamento crítico. Mais profundo e personalizado.
+                                </p>
+                                <button class="btn-success" style="width: 100%; margin-top: 15px;" onclick="switchTab(2)">Começar →</button>
+                            </div>
+                        </div>
+
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">📚 Suas Análises Anteriores:</h3>
+                        <div id="homeAnalises" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                            <!-- Preenchido por JavaScript -->
+                        </div>
+                        <div id="emptyAnalises" style="text-align: center; color: #999; padding: 30px;">
+                            Nenhuma análise criada ainda. Comece uma nova!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 1: ANÁLISE AUTOMÁTICA -->
+                <div class="tab-content">
+                    <div class="form-section">
+                        <h2>🤖 Análise Automática com IA</h2>
+                        
+                        <div class="mode-info">
+                            <strong>💡 Como funciona:</strong> Cole o texto completo do artigo e a IA vai preencher automaticamente todas as 10 tabelas do esquema de crítica. Você recebe a análise pronta para revisar e ajustar.
+                        </div>
+
+                        <div class="form-group">
+                            <label>📄 Cole o artigo/texto a ser analisado:</label>
+                            <textarea id="autoTextInput" class="large" placeholder="Cole aqui o texto completo do artigo, documento ou passagem que deseja analisar. Quanto mais longo, melhor a análise..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>📌 Título da Análise:</label>
+                            <input type="text" id="autoTitulo" placeholder="Ex: Análise crítica de Novo Paradigma de Francisco sobre Sinodalidade">
+                        </div>
+
+                        <div class="form-group">
+                            <label>👤 Autor do texto (opcional):</label>
+                            <input type="text" id="autoAutor" placeholder="Nome do autor">
+                        </div>
+
+                        <div class="form-group">
+                            <label>📅 Data:</label>
+                            <input type="date" id="autoData">
+                        </div>
+
+                        <div class="loading" id="autoLoading">
+                            <div class="spinner"></div>
+                            <p>⏳ Analisando o texto com IA (pode levar 30-60 segundos)...</p>
+                        </div>
+
+                        <div id="autoResultado" style="display: none;">
+                            <div style="background: #d4edda; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                                <strong style="color: #155724;">✓ Análise completada!</strong>
+                                <p style="color: #155724; font-size: 0.9em; margin-top: 5px;">Revise os resultados abaixo e ajuste se necessário.</p>
+                            </div>
+
+                            <div id="autoResultadoContent">
+                                <!-- Preenchido por JavaScript -->
+                            </div>
+
+                            <button class="btn-success" onclick="salvarAnaliseAuto()" style="margin-top: 20px;">💾 Salvar Análise Automática</button>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn-primary" onclick="analisarAutomatic()">🚀 Analisar com IA</button>
+                            <button class="btn-secondary" onclick="limparAuto()">🗑️ Limpar Campos</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: ANÁLISE MANUAL -->
+                <div class="tab-content">
+                    <div class="form-section">
+                        <h2>✍️ Análise Manual Completa</h2>
+
+                        <div class="mode-info">
+                            <strong>💡 Como funciona:</strong> Preencha cada etapa manualmente com sua análise pessoal. Você tem controle total sobre cada parte da crítica.
+                        </div>
+
+                        <!-- Título e Info -->
+                        <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                            <div class="form-group">
+                                <label>📌 Título da Análise:</label>
+                                <input type="text" id="manualTitulo" placeholder="Ex: Análise de Documento Magisterial sobre Pobreza">
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                                <div class="form-group">
+                                    <label>👤 Autor do Texto:</label>
+                                    <input type="text" id="manualAutor" placeholder="Nome do autor">
+                                </div>
+                                <div class="form-group">
+                                    <label>📅 Data:</label>
+                                    <input type="date" id="manualData">
+                                </div>
+                                <div class="form-group">
+                                    <label>🏷️ Tags:</label>
+                                    <input type="text" id="manualTags" placeholder="ex: teologia, hierarquia, Francisco">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACCORDIONS COM TODAS AS 10 TABELAS -->
+                        <div id="manualAccordion">
+                            <!-- Gerado por JavaScript -->
+                        </div>
+
+                        <button class="btn-success" onclick="salvarAnaliseManual()" style="margin-top: 30px; width: 100%; padding: 15px; font-size: 1em;">💾 Salvar Análise Manual</button>
+                    </div>
+                </div>
+
+                <!-- TAB 3: CATÁLOGO -->
+                <div class="tab-content">
+                    <div class="form-section">
+                        <h2>📚 Catálogo de Análises</h2>
+
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                            <button class="nav-btn" onclick="filtrarCatalogo('todas')" style="border: 1px solid #3498db; background: #3498db; color: white; padding: 10px 15px;">Todas</button>
+                            <button class="nav-btn" onclick="filtrarCatalogo('auto')" style="border: 1px solid #27ae60; background: white; color: #27ae60; padding: 10px 15px;">🤖 Automáticas</button>
+                            <button class="nav-btn" onclick="filtrarCatalogo('manual')" style="border: 1px solid #3498db; background: white; color: #3498db; padding: 10px 15px;">✍️ Manuais</button>
+                        </div>
+
+                        <div class="catalog" id="catalogoContainer">
+                            <!-- Gerado por JavaScript -->
+                        </div>
+
+                        <div id="catalogoVazio" class="empty-state">
+                            <p>📚 Nenhuma análise criada ainda.</p>
+                            <p style="font-size: 0.9em; margin-top: 10px;">Crie uma nova análise para começar seu catálogo!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: RESUMO COMPLETO -->
+                <div class="tab-content">
+                    <div class="form-section">
+                        <h2>📊 Resumo de Todas as Análises</h2>
+
+                        <div id="resumoContainer">
+                            <!-- Gerado por JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE VISUALIZAÇÃO -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="viewModalContent">
+                <!-- Conteúdo preenchido por JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'analisesTextoCritico';
+        const TABELAS = [
+            { id: 'tab1', titulo: '1️⃣ Mapeamento Inicial', campos: ['tese', 'argumentos', 'evidencias', 'conclusao', 'tom'] },
+            { id: 'tab2', titulo: '2️⃣ Pressupostos', campos: ['pressupostos'] },
+            { id: 'tab3', titulo: '3️⃣ Silêncios', campos: ['silenciosData'] },
+            { id: 'tab4', titulo: '4️⃣ Contradições', campos: ['contradicoesData'] },
+            { id: 'tab5', titulo: '5️⃣ Genealogia', campos: ['quando', 'porQue', 'quem', 'alternativas', 'continuidade'] },
+            { id: 'tab6', titulo: '6️⃣ Análise de Poder', campos: ['poderData'] },
+            { id: 'tab7', titulo: '7️⃣ Perguntas Críticas', campos: ['perguntasData'] },
+            { id: 'tab8', titulo: '8️⃣ Checklist', campos: ['checklist'] },
+            { id: 'tab9', titulo: '9️⃣ Rotina 4 Dias', campos: ['rotina'] },
+            { id: 'tab10', titulo: '⚡ Minimalista', campos: ['afirma', 'pressupoe', 'ignora', 'contradicao', 'pergunta', 'fonte'] }
+        ];
+
+        let currentTab = 0;
+        let filtroAtual = 'todas';
+
+        window.addEventListener('load', () => {
+            setarDataAtual();
+            renderizarHome();
+            buildManualAccordion();
+        });
+
+        function setarDataAtual() {
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('autoData').value = hoje;
+            document.getElementById('manualData').value = hoje;
+        }
+
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.querySelectorAll('.tab-content')[tabIndex].classList.add('active');
+            document.querySelectorAll('.nav-btn')[tabIndex].classList.add('active');
+            
+            currentTab = tabIndex;
+            window.scrollTo(0, 0);
+
+            if (tabIndex === 3) renderizarCatalogo();
+            if (tabIndex === 4) renderizarResumo();
+        }
+
+        function renderizarHome() {
+            const analises = obterTodasAnalises();
+            const countAnalises = document.getElementById('countAnalises');
+            const countAuto = document.getElementById('countAuto');
+            const countManual = document.getElementById('countManual');
+            const homeAnalises = document.getElementById('homeAnalises');
+            const emptyAnalises = document.getElementById('emptyAnalises');
+
+            countAnalises.textContent = analises.length;
+            countAuto.textContent = analises.filter(a => a.tipo === 'auto').length;
+            countManual.textContent = analises.filter(a => a.tipo === 'manual').length;
+
+            if (analises.length === 0) {
+                homeAnalises.style.display = 'none';
+                emptyAnalises.style.display = 'block';
+            } else {
+                homeAnalises.style.display = 'grid';
+                emptyAnalises.style.display = 'none';
+                homeAnalises.innerHTML = analises.slice(0, 6).map(a => `
+                    <div onclick="abrirAnalise('${a.id}')" style="cursor: pointer; padding: 15px; background: white; border: 1px solid #ddd; border-radius: 6px; transition: all 0.3s;">
+                        <h4 style="color: #2c3e50; margin-bottom: 5px;">${a.titulo}</h4>
+                        <p style="font-size: 0.8em; color: #999; margin: 5px 0;">
+                            <span class="badge ${a.tipo === 'auto' ? 'badge-auto' : 'badge-manual'}">${a.tipo === 'auto' ? '🤖 Automática' : '✍️ Manual'}</span>
+                        </p>
+                        <p style="font-size: 0.8em; color: #999; margin: 5px 0;">${new Date(a.data).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function buildManualAccordion() {
+            const accordion = document.getElementById('manualAccordion');
+            accordion.innerHTML = TABELAS.map((tabela, idx) => `
+                <div style="margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden;">
+                    <button onclick="toggleAccordion(${idx})" style="width: 100%; padding: 15px; background: #f8f9fa; border: none; cursor: pointer; text-align: left; font-weight: 600; color: #2c3e50; font-size: 1em;">
+                        ${tabela.titulo} <span style="float: right;">▼</span>
+                    </button>
+                    <div id="accord-${idx}" style="display: none; padding: 20px; background: white; border-top: 1px solid #ddd;">
+                        ${renderizarTabela(tabela, idx)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderizarTabela(tabela, idx) {
+            if (tabela.id === 'tab1') {
+                return `
+                    <div class="form-group">
+                        <label>Tese Principal:</label>
+                        <textarea id="manual_tese" placeholder="Qual é a afirmação central do texto?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Argumentos Principais:</label>
+                        <textarea id="manual_argumentos" placeholder="Listar brevemente..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Evidências:</label>
+                        <textarea id="manual_evidencias" placeholder="Quais provas/exemplos..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Conclusão:</label>
+                        <textarea id="manual_conclusao" placeholder="Aonde o texto quer chegar..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tom:</label>
+                        <select id="manual_tom">
+                            <option value="">Selecione...</option>
+                            <option value="celebratorio">Celebratório</option>
+                            <option value="critico">Crítico</option>
+                            <option value="neutro">Neutro</option>
+                            <option value="defensivo">Defensivo</option>
+                        </select>
+                    </div>
+                `;
+            } else if (tabela.id === 'tab10') {
+                return `
+                    <div class="form-group">
+                        <label>Texto afirma:</label>
+                        <textarea id="manual_afirma" placeholder="O que o texto afirma..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Texto pressupõe:</label>
+                        <textarea id="manual_pressupoe" placeholder="O que o texto assume..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Texto ignora:</label>
+                        <textarea id="manual_ignora" placeholder="O que o texto não menciona..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Contradição:</label>
+                        <textarea id="manual_contradicao" placeholder="Contradição central..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Pergunta Crítica:</label>
+                        <textarea id="manual_pergunta" placeholder="A pergunta essencial..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Fonte que questiona:</label>
+                        <textarea id="manual_fonte" placeholder="Cite um crítico..."></textarea>
+                    </div>
+                `;
+            }
+            return `<p style="color: #999;">Seção ${tabela.titulo}</p>`;
+        }
+
+        function toggleAccordion(idx) {
+            const el = document.getElementById(`accord-${idx}`);
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function analisarAutomatic() {
+            const texto = document.getElementById('autoTextInput').value.trim();
+            const titulo = document.getElementById('autoTitulo').value || 'Análise Automática';
+
+            if (!texto) {
+                alert('Por favor, cole um texto para analisar!');
+                return;
+            }
+
+            document.getElementById('autoLoading').classList.add('show');
+            document.getElementById('autoResultado').style.display = 'none';
+
+            // Simular análise com Claude API
+            fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-6',
+                    max_tokens: 2000,
+                    messages: [{
+                        role: 'user',
+                        content: `Você é um especialista em análise crítica de textos acadêmicos e teológicos. Analise o seguinte texto COMPLETAMENTE de acordo com o "Esquema Universal de Crítica Textual" com as 10 tabelas:
+
+TEXTO A ANALISAR:
+"""
+${texto}
+"""
+
+RESPONDA EM JSON COM ESTA ESTRUTURA EXATA (sem markdown, apenas JSON puro):
+{
+  "tab1": {
+    "tese": "a afirmação central em 1-2 frases",
+    "argumentos": "os 3-4 argumentos principais",
+    "evidencias": "as provas/exemplos oferecidos",
+    "conclusao": "a conclusão do texto",
+    "tom": "celebratorio/critico/neutro/defensivo"
+  },
+  "tab2": {
+    "pressupostos": ["presuposto 1", "presuposto 2", "presuposto 3"]
+  },
+  "tab3": {
+    "silenciosImportantes": ["tema não mencionado 1", "tema 2", "tema 3"]
+  },
+  "tab4": {
+    "contradicoes": ["contradição 1", "contradição 2"]
+  },
+  "tab5": {
+    "quando": "data/período",
+    "porQue": "por que surge neste momento",
+    "quem": "quem se beneficia",
+    "alternativas": "ideias marginalizadas"
+  },
+  "tab6": {
+    "poder": ["questão 1", "questão 2"]
+  },
+  "tab10": {
+    "afirma": "síntese do que afirma",
+    "pressupoe": "síntese do que pressupõe",
+    "ignora": "síntese do que ignora",
+    "contradicao": "contradição central",
+    "pergunta": "pergunta crítica essencial",
+    "fonte": "sugestão de fonte crítica"
+  }
+}`
+                    }]
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const response = data.content[0].text;
+                try {
+                    const analise = JSON.parse(response);
+                    exibirResultadoAuto(analise);
+                } catch(e) {
+                    exibirResultadoAuto(JSON.parse(response.replace(/```json\n?|\n?```/g, '')));
+                }
+                document.getElementById('autoLoading').classList.remove('show');
+                document.getElementById('autoResultado').style.display = 'block';
+            })
+            .catch(err => {
+                console.error('Erro:', err);
+                document.getElementById('autoLoading').classList.remove('show');
+                alert('Erro ao conectar com IA. Verifique sua conexão de internet.');
+            });
+        }
+
+        function exibirResultadoAuto(analise) {
+            const html = `
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">1️⃣ Mapeamento Inicial</h3>
+                    <div style="background: #f0f7ff; padding: 15px; border-radius: 6px;">
+                        <p><strong>Tese:</strong> ${analise.tab1.tese}</p>
+                        <p><strong>Argumentos:</strong> ${analise.tab1.argumentos}</p>
+                        <p><strong>Tom:</strong> <span class="badge badge-auto">${analise.tab1.tom}</span></p>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">2️⃣ Pressupostos</h3>
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 6px;">
+                        ${(analise.tab2?.pressupostos || []).map(p => `<p>• ${p}</p>`).join('')}
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">3️⃣ Silêncios</h3>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 6px;">
+                        ${(analise.tab3?.silenciosImportantes || []).map(s => `<p>• ${s}</p>`).join('')}
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">⚡ Síntese Minimalista</h3>
+                    <div style="background: #e8f5e9; padding: 15px; border-radius: 6px;">
+                        <p><strong>Afirma:</strong> ${analise.tab10.afirma}</p>
+                        <p><strong>Pressupõe:</strong> ${analise.tab10.pressupoe}</p>
+                        <p><strong>Ignora:</strong> ${analise.tab10.ignora}</p>
+                        <p><strong>❓ Pergunta Crítica:</strong> <em>${analise.tab10.pergunta}</em></p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('autoResultadoContent').innerHTML = html;
+            window.analiseDados = analise;
+        }
+
+        function salvarAnaliseAuto() {
+            if (!window.analiseDados) {
+                alert('Nenhuma análise para salvar!');
+                return;
+            }
+
+            const titulo = document.getElementById('autoTitulo').value || 'Análise Automática';
+            const autor = document.getElementById('autoAutor').value;
+            const data = document.getElementById('autoData').value;
+
+            const analise = {
+                id: Date.now().toString(),
+                titulo,
+                autor,
+                data,
+                tipo: 'auto',
+                criacao: new Date().toISOString(),
+                dados: window.analiseDados
+            };
+
+            let analises = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            analises.push(analise);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(analises));
+
+            showSuccess('Análise automática salva com sucesso!');
+            limparAuto();
+            renderizarHome();
+        }
+
+        function salvarAnaliseManual() {
+            const titulo = document.getElementById('manualTitulo').value;
+            const autor = document.getElementById('manualAutor').value;
+            const data = document.getElementById('manualData').value;
+
+            if (!titulo) {
+                alert('Por favor, dê um título à análise!');
+                return;
+            }
+
+            const analise = {
+                id: Date.now().toString(),
+                titulo,
+                autor,
+                data,
+                tipo: 'manual',
+                criacao: new Date().toISOString(),
+                dados: {
+                    tab1: {
+                        tese: document.getElementById('manual_tese')?.value || '',
+                        argumentos: document.getElementById('manual_argumentos')?.value || '',
+                        evidencias: document.getElementById('manual_evidencias')?.value || '',
+                        conclusao: document.getElementById('manual_conclusao')?.value || '',
+                        tom: document.getElementById('manual_tom')?.value || ''
+                    },
+                    tab10: {
+                        afirma: document.getElementById('manual_afirma')?.value || '',
+                        pressupoe: document.getElementById('manual_pressupoe')?.value || '',
+                        ignora: document.getElementById('manual_ignora')?.value || '',
+                        contradicao: document.getElementById('manual_contradicao')?.value || '',
+                        pergunta: document.getElementById('manual_pergunta')?.value || '',
+                        fonte: document.getElementById('manual_fonte')?.value || ''
+                    }
+                }
+            };
+
+            let analises = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            analises.push(analise);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(analises));
+
+            showSuccess('Análise manual salva com sucesso!');
+            document.getElementById('manualTitulo').value = '';
+            document.getElementById('manualAutor').value = '';
+            document.getElementById('manualTags').value = '';
+            renderizarHome();
+        }
+
+        function obterTodasAnalises() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]').sort((a, b) => new Date(b.data) - new Date(a.data));
+        }
+
+        function renderizarCatalogo() {
+            const analises = obterTodasAnalises();
+            const filtradas = filtroAtual === 'todas' ? analises : analises.filter(a => a.tipo === filtroAtual);
+            const container = document.getElementById('catalogoContainer');
+            const vazio = document.getElementById('catalogoVazio');
+
+            if (filtradas.length === 0) {
+                container.style.display = 'none';
+                vazio.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'grid';
+            vazio.style.display = 'none';
+            container.innerHTML = filtradas.map(a => `
+                <div class="catalog-card">
+                    <h3>${a.titulo}</h3>
+                    <div class="meta">
+                        <span class="badge ${a.tipo === 'auto' ? 'badge-auto' : 'badge-manual'}">${a.tipo === 'auto' ? '🤖 Automática' : '✍️ Manual'}</span>
+                        <span style="margin-left: 10px;">${new Date(a.data).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    <div class="preview">${a.autor || 'Sem autor'}</div>
+                    <div class="actions">
+                        <button class="btn-primary" onclick="abrirAnalise('${a.id}')">Visualizar</button>
+                        <button class="btn-danger" onclick="deletarAnalise('${a.id}')">Deletar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filtrarCatalogo(filtro) {
+            filtroAtual = filtro;
+            renderizarCatalogo();
+        }
+
+        function abrirAnalise(id) {
+            const analises = obterTodasAnalises();
+            const analise = analises.find(a => a.id === id);
+
+            if (!analise) {
+                alert('Análise não encontrada!');
+                return;
+            }
+
+            let html = `<h2>${analise.titulo}</h2>
+            <p><strong>Tipo:</strong> <span class="badge ${analise.tipo === 'auto' ? 'badge-auto' : 'badge-manual'}">${analise.tipo === 'auto' ? '🤖 Automática' : '✍️ Manual'}</span></p>
+            <p><strong>Autor:</strong> ${analise.autor || 'Não especificado'}</p>
+            <p><strong>Data:</strong> ${new Date(analise.data).toLocaleDateString('pt-BR')}</p>
+            <hr style="margin: 20px 0;">`;
+
+            if (analise.dados.tab1) {
+                html += `<h3>Mapeamento Inicial</h3>
+                <p><strong>Tese:</strong> ${analise.dados.tab1.tese}</p>
+                <p><strong>Argumentos:</strong> ${analise.dados.tab1.argumentos}</p>`;
+            }
+
+            if (analise.dados.tab10) {
+                html += `<h3>Síntese Minimalista</h3>
+                <p><strong>Afirma:</strong> ${analise.dados.tab10.afirma}</p>
+                <p><strong>Pressupõe:</strong> ${analise.dados.tab10.pressupoe}</p>
+                <p><strong>Pergunta Crítica:</strong> <em>${analise.dados.tab10.pergunta}</em></p>`;
+            }
+
+            document.getElementById('viewModalContent').innerHTML = html;
+            document.getElementById('viewModal').classList.add('show');
+        }
+
+        function deletarAnalise(id) {
+            if (!confirm('Tem certeza que deseja deletar esta análise?')) return;
+
+            let analises = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            analises = analises.filter(a => a.id !== id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(analises));
+
+            showSuccess('Análise deletada!');
+            renderizarCatalogo();
+            renderizarHome();
+        }
+
+        function renderizarResumo() {
+            const analises = obterTodasAnalises();
+            const container = document.getElementById('resumoContainer');
+
+            if (analises.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Nenhuma análise ainda.</p>';
+                return;
+            }
+
+            const auto = analises.filter(a => a.tipo === 'auto').length;
+            const manual = analises.filter(a => a.tipo === 'manual').length;
+
+            let html = `
+                <div class="summary-box">
+                    <h3>📊 Estatísticas Gerais</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="number">${analises.length}</div>
+                            <div class="label">Total de Análises</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="number">${auto}</div>
+                            <div class="label">Automáticas (IA)</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="number">${manual}</div>
+                            <div class="label">Manuais</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color: #2c3e50; margin: 30px 0 15px;">📋 Todas as Análises:</h3>
+                <table>
+                    <tr>
+                        <th>Título</th>
+                        <th>Tipo</th>
+                        <th>Autor</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+                    ${analises.map(a => `
+                        <tr>
+                            <td><strong>${a.titulo}</strong></td>
+                            <td><span class="badge ${a.tipo === 'auto' ? 'badge-auto' : 'badge-manual'}">${a.tipo === 'auto' ? '🤖' : '✍️'}</span></td>
+                            <td>${a.autor || '-'}</td>
+                            <td>${new Date(a.data).toLocaleDateString('pt-BR')}</td>
+                            <td>
+                                <button class="btn-primary" style="padding: 6px 12px; font-size: 0.85em;" onclick="abrirAnalise('${a.id}')">Ver</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </table>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function exportTudo() {
+            const analises = obterTodasAnalises();
+            const json = JSON.stringify(analises, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `analises-critica-textual-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function limparAuto() {
+            document.getElementById('autoTextInput').value = '';
+            document.getElementById('autoTitulo').value = '';
+            document.getElementById('autoAutor').value = '';
+            document.getElementById('autoResultado').style.display = 'none';
+        }
+
+        function limparTudo() {
+            if (!confirm('ATENÇÃO: Isso vai deletar TODAS as análises. Tem certeza?')) return;
+            if (!confirm('Confirma? Esta ação é irreversível!')) return;
+
+            localStorage.removeItem(STORAGE_KEY);
+            showSuccess('Todas as análises foram deletadas!');
+            renderizarHome();
+            renderizarCatalogo();
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('successMsg');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        function closeModal() {
+            document.getElementById('viewModal').classList.remove('show');
+        }
+
+        window.onclick = (e) => {
+            const modal = document.getElementById('viewModal');
+            if (e.target === modal) modal.classList.remove('show');
+        }
+    </script>
+</body>
+</html>
